@@ -89,6 +89,7 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
             {
                 where.append(" and rentarea.value <= "+ rentAreaTo);
             }
+
         }
         Long rentPriceTo=buildingSearchRequest.getRentPriceTo();
         Long rentPriceFrom=buildingSearchRequest.getRentPriceFrom();

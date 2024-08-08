@@ -29,25 +29,22 @@ private CustomerRepository customerRepository;
     public void updateOrAdd(TransactionDTO transactionDTO) {
         TransactionEntity transactionEntity=new TransactionEntity();
 
-        if(transactionDTO.getId()==null) {
 
-            transactionEntity.setCode(transactionDTO.getCode());
-            transactionEntity.setNote(transactionDTO.getNote());
 
-            transactionEntity.setCustomer(customerRepository.findById(transactionDTO.getCustomerId()).get());
+        if(transactionDTO.getCustomerId()!=null){
+            transactionEntity=transactionRepository.findById(transactionDTO.getId()).get();
+
         }
         else
-        {   transactionEntity = transactionRepository.findById(transactionDTO.getId()).get();
-            transactionEntity.setNote(transactionDTO.getNote());
-            if(SecurityUtils.getPrincipal()!=null)
-            {
-                String modifiedby  = SecurityUtils.getPrincipal().getFullName();
-                transactionEntity.setModifiedBy(modifiedby);
-                transactionEntity.setModifiedDate(new Date());
-            }
+        {
+            transactionEntity.setCustomer(customerRepository.findById(transactionDTO.getCustomerId()).get());
 
+            transactionEntity.setCode(transactionDTO.getCode());
         }
+        transactionEntity.setNote(transactionDTO.getNote());
+
         transactionRepository.save(transactionEntity);
+
 
 
 

@@ -1,5 +1,6 @@
 package com.javaweb.entity;
 
+import com.javaweb.security.utils.SecurityUtils;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Date;
 
 @MappedSuperclass
@@ -20,20 +22,20 @@ public class BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "createddate")
-    @CreatedDate
+    @Column(name = "createddate",updatable = false)
+
     private Date createdDate;
 
-    @Column(name = "createdby")
-    @CreatedBy
+    @Column(name = "createdby",updatable = false)
+
     private String createdBy;
 
     @Column(name = "modifieddate")
-  //  @LastModifiedDate
+
     private Date modifiedDate;
 
     @Column(name = "modifiedby")
-   // @LastModifiedBy
+
     private String modifiedBy;
 
     public Long getId() {
@@ -75,4 +77,19 @@ public class BaseEntity implements Serializable {
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
+    @PrePersist
+    public void handleBeforeCreate() {
+        this.createdDate = Date.from(Instant.now());
+        this.createdBy= SecurityUtils.getPrincipal().getFullName();
+        }
+    @PreUpdate
+    public void handleBeforeUpdate() {
+        this.modifiedDate = Date.from(Instant.now());
+        this.modifiedBy = SecurityUtils.getPrincipal().getFullName();
+    }
+
+
+
+
+
 }

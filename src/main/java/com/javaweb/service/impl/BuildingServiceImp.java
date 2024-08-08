@@ -78,6 +78,10 @@ public class BuildingServiceImp implements BuildingService {
     public BuildingDTO AddOrUpdateBuilding(BuildingDTO buildingDTO) {
         Long buildingId = buildingDTO.getId();
         BuildingEntity building = modelMapper.map(buildingDTO, BuildingEntity.class);
+        if(buildingDTO.getId()!=null)
+        {
+            building.setUserEntities(buildingRespository.findById(buildingDTO.getId()).get().getUserEntities());
+        }
         List<String> typeCode = buildingDTO.getTypeCode();
         String type = String.join(",", typeCode);
 
